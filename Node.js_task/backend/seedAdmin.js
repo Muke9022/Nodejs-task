@@ -13,21 +13,21 @@ const seedAdmin = async () => {
     });
 
     if (existingAdmin) {
-      console.log("✅ Admin already exists.");
+      console.log(" Admin already exists.");
       process.exit(0);
     }
 
     await Admin.create({
       name: "Admin",
       email: "admin@gmail.com",
-      password: "admin123", // pre-save middleware will hash it
+      password: "admin123", 
       role: "admin",
     });
 
-    console.log("✅ Admin created successfully.");
+    console.log("Admin created successfully.");
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error seeding admin:", error.message);
+    console.error(" Error seeding admin:", error.message);
     process.exit(1);
   }
 };
