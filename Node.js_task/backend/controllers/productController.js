@@ -5,7 +5,16 @@ exports.addProduct = async (req, res) => {
   try {
     const { productName, productDescription } = req.body;
 
-    const brands = JSON.parse(req.body.brands);
+  let brands;
+
+try {
+  brands = JSON.parse(req.body.brands);
+} catch {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid brands format",
+  });
+}
 
    brands.forEach((brand, index) => {
   if (req.files[index]) {
@@ -77,11 +86,19 @@ exports.deleteProduct = async (req, res) => {
 exports.viewPDF = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    if (!product)
+      return res.status(404).json({ message: "Product not found" });
+
+    if (product.seller.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Unauthorized to view this product",
+      });
+    }
 
     generateProductPDF(product, res);
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
